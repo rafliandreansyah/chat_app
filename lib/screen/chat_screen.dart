@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../widget/chat/message.dart';
+import '../widget/chat/chat_form.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -59,15 +60,8 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: Message(),
           ),
+          ChatForm(),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          FirebaseFirestore.instance
-              .collection('chats/auwFUep7zxbKGUAsR0zI/messages')
-              .add({'text': 'testing'});
-        },
-        child: Icon(Icons.add),
       ),
     );
   }
