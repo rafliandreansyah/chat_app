@@ -6,8 +6,8 @@ import '../pick_image/user_pick_image.dart';
 
 class AuthForm extends StatefulWidget {
   var _isLoading;
-  final void Function(
-      String email, String password, String username, bool isLogin) _submitAuth;
+  final void Function(String email, String password, String username,
+      bool isLogin, File imgFile) _submitAuth;
 
   AuthForm(this._submitAuth, this._isLoading);
 
@@ -23,16 +23,35 @@ class _AuthFormState extends State<AuthForm> {
   bool _isLogin = true;
   File? _imgFile;
 
+  void _pickImage(File imgFile) {
+    _imgFile = imgFile;
+  }
+
   void _submit() {
     var isValid = _formKey.currentState!.validate();
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (_imgFile == null && !_isLogin) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            'Please pick an image',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      );
+      return;
+    }
 
     if (isValid) {
       _formKey.currentState!.save();
       // print(_email);
       // print(_userName);
       // print(_password);
-      FocusManager.instance.primaryFocus?.unfocus();
-      widget._submitAuth(_email, _password, _userName, _isLogin);
+
+      widget._submitAuth(_email, _password, _userName, _isLogin, _imgFile!);
     }
   }
 
@@ -49,7 +68,7 @@ class _AuthFormState extends State<AuthForm> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (!_isLogin) UserPickImage(),
+                  if (!_isLogin) UserPickImage(_pickImage),
                   TextFormField(
                       key: const ValueKey('email'),
                       validator: (value) {

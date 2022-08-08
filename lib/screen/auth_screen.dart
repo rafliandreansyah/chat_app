@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -15,8 +18,8 @@ class _AuthScreenState extends State<AuthScreen> {
   final auth = FirebaseAuth.instance;
   var _isLoading = false;
 
-  void _submitAuthUser(
-      String email, String password, String username, bool isLogin) async {
+  void _submitAuthUser(String email, String password, String username,
+      bool isLogin, File imgFile) async {
     UserCredential credential;
 
     try {
@@ -33,12 +36,31 @@ class _AuthScreenState extends State<AuthScreen> {
           email: email,
           password: password,
         );
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('image_profile')
+            .child('${credential.user!.uid}.jpg');
+
+        try {
+          await ref.putFile(imgFile);
+        } on FirebaseException catch (e) {
+          e.stackTrace;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed upload image!'),
+            ),
+          );
+          return;
+        }
+
+        final imgUrl = await ref.getDownloadURL();
         await FirebaseFirestore.instance
             .collection('users')
             .doc(credential.user?.uid)
             .set({
           'email': email,
           'username': username,
+          'imgUrl': imgUrl,
         });
       }
 
@@ -71,7 +93,8 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
         ),
       );
-    } catch (e) {
+    } catch (e, s) {
+      print(s);
       setState(() {
         _isLoading = false;
       });
