@@ -37,6 +37,7 @@ class Message extends StatelessWidget {
               message[index]['text'],
               message[index]['userId'] == userId,
               message[index]['username'],
+              message[index]['userImage'],
               key: ValueKey(message[index].id),
             ),
           ),

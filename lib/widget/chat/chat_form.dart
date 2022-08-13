@@ -25,6 +25,7 @@ class _ChatFormState extends State<ChatForm> {
       'text': _chatMessage,
       'createdAt': Timestamp.now(),
       'userId': user.uid,
+      'userImage': userData['imgUrl'],
       'username': userData.data()?['username'] ?? 'No name',
     });
     setState(() {

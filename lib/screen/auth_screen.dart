@@ -19,7 +19,7 @@ class _AuthScreenState extends State<AuthScreen> {
   var _isLoading = false;
 
   void _submitAuthUser(String email, String password, String username,
-      bool isLogin, File imgFile) async {
+      bool isLogin, File? imgFile) async {
     UserCredential credential;
 
     try {
@@ -42,7 +42,7 @@ class _AuthScreenState extends State<AuthScreen> {
             .child('${credential.user!.uid}.jpg');
 
         try {
-          await ref.putFile(imgFile);
+          await ref.putFile(imgFile!);
         } on FirebaseException catch (e) {
           e.stackTrace;
           ScaffoldMessenger.of(context).showSnackBar(

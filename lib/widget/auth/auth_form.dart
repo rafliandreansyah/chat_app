@@ -7,7 +7,7 @@ import '../pick_image/user_pick_image.dart';
 class AuthForm extends StatefulWidget {
   var _isLoading;
   final void Function(String email, String password, String username,
-      bool isLogin, File imgFile) _submitAuth;
+      bool isLogin, File? imgFile) _submitAuth;
 
   AuthForm(this._submitAuth, this._isLoading);
 
@@ -51,7 +51,7 @@ class _AuthFormState extends State<AuthForm> {
       // print(_userName);
       // print(_password);
 
-      widget._submitAuth(_email, _password, _userName, _isLogin, _imgFile!);
+      widget._submitAuth(_email, _password, _userName, _isLogin, _imgFile);
     }
   }
 
